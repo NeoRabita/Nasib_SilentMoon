@@ -1,19 +1,21 @@
 
-using System.Threading.Tasks;
 using SilentMoon.Application.DTOs.Account;
+using SilentMoon.Application.DTOs.Email;
 using SilentMoon.Application.DTOs.JWT;
 using SilentMoon.Domain.Entities;
+using System.Threading.Tasks;
 
 namespace SilentMoon.Application.Interfaces.Services
 {
     public interface IAccountService
     {
-        Task<string> RegisterAsync(RegisterRequest request);
-        Task<string> SendEmailVerification(ApplicationUser user);
-        Task<string> ConfirmEmailAsync(string email, string code);
-        Task<AuthenticationResponse> AuthenticateAsync(AuthenticationRequest request, string ipAddress);
-        Task<JwtTokenDto> RevokeByRefreshToken(string token);
-        Task<string> ForgotPasswordAsync(ForgotPasswordRequest request);
-        Task<string> ResetPasswordAsync(ResetPasswordRequest request);
+        Task RegisterAsync(RegisterRequest request);
+        Task<AuthenticationResponse> LoginAsync(LoginRequest request, string ipAddress);
+        Task VerifyEmailAsync(VerifyEmailRequest request);
+        Task ResendOtpAsync(ResendOtpRequest request);
+        Task<AuthenticationResponse> RefreshTokenAsync(RefreshTokenRequest request);
+        Task LogoutAsync(LogoutRequest request);
+        Task ForgotPasswordAsync(ForgotPasswordRequest request);
+        Task ResetPasswordAsync(ResetPasswordRequest request);
     }
 }

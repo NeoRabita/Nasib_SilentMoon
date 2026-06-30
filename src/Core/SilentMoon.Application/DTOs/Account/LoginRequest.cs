@@ -1,9 +1,9 @@
-using System;
+﻿
 using System.ComponentModel.DataAnnotations;
 
 namespace SilentMoon.Application.DTOs.Account
 {
-    public class AuthenticationRequest
+    public class LoginRequest
     {
         [Required]
         [EmailAddress]

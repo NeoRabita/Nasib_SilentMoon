@@ -5,12 +5,12 @@ namespace SilentMoon.Application.DTOs.JWT
     public class JwtTokenDto
     {
         public string Token { get; set; }
-        public DateTimeOffset Expires { get; set; }
+        public DateTimeOffset ExpiresAt { get; set; }
 
-        public JwtTokenDto(string token, DateTimeOffset expires)
+        public JwtTokenDto(string token, DateTimeOffset expiresAt)
         {
             Token = token;
-            Expires = expires;
+            ExpiresAt = expiresAt;
         }
     }
 }
