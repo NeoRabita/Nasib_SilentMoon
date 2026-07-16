@@ -11,6 +11,7 @@ namespace SilentMoon.Application
         {
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
             services.AddScoped<IDispatcher, Dispatcher>();
+            services.AddScoped<Features.Auth.Common.ExternalLoginProcessor>();
             services.AddCqrsHandlers(Assembly.GetExecutingAssembly());
         }
     }

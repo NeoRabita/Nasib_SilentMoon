@@ -35,24 +35,21 @@ namespace SilentMoon.Application.Features.Pomodoros.Commands.CreatePomodoro
 
         public async Task<Result<string>> Handle(CreatePomodoroCommand command, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("CreatePomodoro strated.");
+            _logger.LogInformation("CreatePomodoro started.");
 
-            if (command == null)
-                return Error.NullValue;
+            var userIdStr = userService.GetUserId();
+            if (string.IsNullOrEmpty(userIdStr) || !int.TryParse(userIdStr, out var userId))
+                return UserErrors.Unauthorized();
 
             var pomodoro = command.ToPomodoro();
-            pomodoro.UserId = "test_user_id";
-
-            if (pomodoro.UserId == null)
-                return UserErrors.NotFound(Guid.NewGuid());
+            pomodoro.UserId = userId;
 
             await _uow.PomodoroRepository.AddAsync(pomodoro);
-            await _uow.SaveChangesAsync();
+            await _uow.SaveChangesAsync(cancellationToken);
 
             var result = await _uow.PomodoroRepository.CreatePomodoroLog(pomodoro.Id);
 
             _logger.LogInformation("Pomodoro successfully created. ID: {PomodoroId}", pomodoro.Id);
-
             return result;
         }
     }

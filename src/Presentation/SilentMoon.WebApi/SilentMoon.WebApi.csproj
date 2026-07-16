@@ -16,4 +16,7 @@
     <ProjectReference Include="..\..\Infrastructure\SilentMoon.Infrastructure.Persistence\SilentMoon.Infrastructure.Persistence.csproj" />
     <ProjectReference Include="..\..\Shared\SilentMoon.SharedKernel\SilentMoon.SharedKernel.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="StartupInjections\Validations\" />
+  </ItemGroup>
 </Project>

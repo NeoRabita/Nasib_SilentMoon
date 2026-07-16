@@ -19,22 +19,24 @@ namespace SilentMoon.WebApi
             Configuration = configuration;
         }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.DisableDefaultApiValidation();
             services.AddControllers();
             services.AddHttpContextAccessor();
+
             services.AddApplicationLayer();
             services.AddPersistenceRegistration(Configuration);
             services.AddPersistenceApiServices(Configuration);
+
+            services.AddJwtAuthentication(Configuration);   
+
             services.AddSwaggerExtension();
             services.AddLocalization();
             services.AddServiceExtension();
             services.EnableApiVersioning();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider provider)
         {
             if (env.IsDevelopment())
@@ -42,13 +44,16 @@ namespace SilentMoon.WebApi
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseErrorHandling();         
             app.UseLocalization();
             app.UseHttpsRedirection();
             app.UseRouting();
+
             app.UseAuthentication();
             app.UseAuthorization();
-            app.UseErrorHandling();
+
             app.UseSwaggerExtension(env, provider);
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

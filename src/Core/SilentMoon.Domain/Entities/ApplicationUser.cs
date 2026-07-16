@@ -11,6 +11,8 @@ namespace SilentMoon.Domain.Entities
         {
             Pomodoros = new HashSet<Pomodoro>();
             RefreshTokens = new HashSet<RefreshToken>();
+            UserTopics = new HashSet<UserTopic>();
+            Reminders = new HashSet<Reminder>();
         }
         public string FirstName { get; set; }
 
@@ -29,6 +31,10 @@ namespace SilentMoon.Domain.Entities
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         public DateTime? LastLoginAt { get; set; }
+        public string AvatarUrl { get; set; }
+
+        public virtual ICollection<UserTopic> UserTopics { get; set; }
+        public virtual ICollection<Reminder> Reminders { get; set; }
 
         public virtual ICollection<RefreshToken> RefreshTokens { get; set; }
 

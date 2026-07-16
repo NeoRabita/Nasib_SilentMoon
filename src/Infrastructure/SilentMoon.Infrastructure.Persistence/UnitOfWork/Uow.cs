@@ -10,13 +10,25 @@ public class Uow : IUow
     private IDbContextTransaction? _transaction;
 
     public IPomodoroRepository PomodoroRepository { get; }
+    public IUserRepository UserRepository { get; }
+    public IRefreshTokenRepository RefreshTokenRepository { get; }
+    public ITopicRepository TopicRepository { get; }
+    public IReminderRepository ReminderRepository { get; }
 
     public Uow(
         AppDbContext context,
-        IPomodoroRepository pomodoroRepository)
+        IPomodoroRepository pomodoroRepository,
+        IUserRepository userRepository,
+        IRefreshTokenRepository refreshTokenRepository,
+        ITopicRepository topicRepository,              
+        IReminderRepository reminderRepository)
     {
         _context = context;
         PomodoroRepository = pomodoroRepository;
+        UserRepository = userRepository;
+        RefreshTokenRepository = refreshTokenRepository;
+        TopicRepository = topicRepository;            
+        ReminderRepository = reminderRepository;
     }
 
     public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
@@ -35,9 +47,7 @@ public class Uow : IUow
         try
         {
             if (_transaction != null)
-            {
                 await _transaction.CommitAsync();
-            }
         }
         catch
         {
@@ -66,7 +76,7 @@ public class Uow : IUow
 
     public void Dispose()
     {
-        _context.Dispose();
         _transaction?.Dispose();
+        _context.Dispose();
     }
 }
