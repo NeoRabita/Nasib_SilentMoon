@@ -46,7 +46,7 @@ namespace SilentMoon.WebApi
 
             app.UseErrorHandling();         
             app.UseLocalization();
-            app.UseHttpsRedirection();
+           // app.UseHttpsRedirection();
             app.UseRouting();
 
             app.UseAuthentication();
