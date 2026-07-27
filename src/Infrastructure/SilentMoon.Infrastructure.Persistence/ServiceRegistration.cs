@@ -2,9 +2,12 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using SilentMoon.Application.Common.Services;
 using SilentMoon.Application.Interfaces.Caching;
 using SilentMoon.Application.Interfaces.Logging;
 using SilentMoon.Application.Interfaces.Messaging;
+using SilentMoon.Application.Common.Services;
 using SilentMoon.Application.Interfaces.Repositories;
 using SilentMoon.Application.Interfaces.Services;
 using SilentMoon.Infrastructure.Persistence.Caching;
@@ -25,45 +28,43 @@ namespace SilentMoon.Infrastructure.Persistence
     {
         public static void AddPersistenceRegistration(this IServiceCollection services, IConfiguration configuration)
         {
-         
             services.AddDbContext<AppDbContext>(options =>
                 options.UseOracle(configuration["APIAppSettings:ConnectionString"],
                     b => b.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName)));
 
             services.AddSingleton<IEventPublisher, RabbitMqEventPublisher>();
+            services.AddHostedService<OtpEmailConsumer>();
+
             services.AddStackExchangeRedisCache(options =>
             {
                 options.Configuration = configuration["APIAppSettings:Redis"];
                 options.InstanceName = Assembly.GetEntryAssembly()?.GetName().Name + "_";
             });
 
-           
             services.Configure<APIAppSettings>(configuration.GetSection("APIAppSettings"));
 
-           
-            services.AddScoped(typeof(IAppLogger<>), typeof(LoggerManager<>));
+            services.AddSingleton(typeof(IAppLogger<>), typeof(LoggerManager<>));
             services.AddScoped<ICacheService, RedisCacheService>();
 
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IDateTimeService, DateTimeService>();
             services.AddScoped<IDapper, DapperClass>();
 
-  
             services.AddScoped<IPasswordHasher, PasswordHasher>();
             services.AddScoped<IJwtService, JwtService>();
             services.AddScoped<IOtpService, OtpService>();
+            services.AddScoped<IAuthTokenIssuer, AuthTokenIssuer>();
+            services.AddScoped<ICurrentUserProvider, CurrentUserProvider>();
+            services.AddScoped<IOtpDispatcher, OtpDispatcher>();
 
-     
             services.AddHttpClient<IGoogleAuthService, GoogleAuthService>();
             services.AddHttpClient<IFacebookAuthService, FacebookAuthService>();
 
-          
             services.AddScoped<IPomodoroRepository, PomodoroRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
             services.AddScoped<ITopicRepository, TopicRepository>();
             services.AddScoped<IReminderRepository, ReminderRepository>();
-
 
             services.AddScoped<IUow, Uow>();
 

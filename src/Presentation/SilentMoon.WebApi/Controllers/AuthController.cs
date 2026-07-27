@@ -17,7 +17,6 @@ namespace SilentMoon.WebApi.Controllers
     [ApiController]
     public class AuthController : BaseController
     {
-        
         [HttpPost("register")]
         public async Task<IResult> Register([FromBody] RegisterCommand command)
         {
@@ -25,16 +24,13 @@ namespace SilentMoon.WebApi.Controllers
             return HandleResult(result);
         }
 
-        
         [HttpPost("login")]
         public async Task<IResult> Login([FromBody] LoginCommand command)
         {
-            command.IpAddress = GetIpAddress();
             var result = await Dispatcher.Send(command);
             return HandleResult(result);
         }
 
-        
         [HttpPost("verify-email")]
         public async Task<IResult> VerifyEmail([FromBody] VerifyEmailCommand command)
         {
@@ -42,7 +38,6 @@ namespace SilentMoon.WebApi.Controllers
             return HandleResult(result);
         }
 
-        
         [HttpPost("resend-otp")]
         public async Task<IResult> ResendOtp([FromBody] ResendOtpCommand command)
         {
@@ -50,49 +45,33 @@ namespace SilentMoon.WebApi.Controllers
             return HandleResult(result);
         }
 
-        
         [HttpPost("refresh")]
         public async Task<IResult> Refresh([FromBody] RefreshTokenCommand command)
         {
-            command.IpAddress = GetIpAddress();
             var result = await Dispatcher.Send(command);
             return HandleResult(result);
         }
 
-        
         [Authorize]
         [HttpPost("logout")]
         public async Task<IResult> Logout([FromBody] LogoutCommand command)
         {
-            command.IpAddress = GetIpAddress();
             var result = await Dispatcher.Send(command);
             return HandleResult(result);
         }
 
-       
         [HttpPost("oauth/google")]
         public async Task<IResult> GoogleLogin([FromBody] GoogleLoginCommand command)
         {
-            command.IpAddress = GetIpAddress();
             var result = await Dispatcher.Send(command);
             return HandleResult(result);
         }
 
-      
         [HttpPost("oauth/facebook")]
         public async Task<IResult> FacebookLogin([FromBody] FacebookLoginCommand command)
         {
-            command.IpAddress = GetIpAddress();
             var result = await Dispatcher.Send(command);
             return HandleResult(result);
-        }
-
-        private string GetIpAddress()
-        {
-            if (Request.Headers.TryGetValue("X-Forwarded-For", out var forwardedFor))
-                return forwardedFor.ToString().Split(',')[0].Trim();
-
-            return HttpContext.Connection.RemoteIpAddress?.MapToIPv4().ToString() ?? "unknown";
         }
     }
 }

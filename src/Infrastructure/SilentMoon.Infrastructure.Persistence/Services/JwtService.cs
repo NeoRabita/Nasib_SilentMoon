@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;      
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;       
+using Microsoft.IdentityModel.Tokens;
 using SilentMoon.Application.DTOs.JWT;
 using SilentMoon.Application.Interfaces.Services;
 using SilentMoon.Domain.Entities;
@@ -52,7 +52,7 @@ namespace SilentMoon.Infrastructure.Persistence.Services
             return new JwtTokenDto(tokenString, expiresAt);
         }
 
-        public RefreshToken GenerateRefreshToken(string ipAddress)
+        public RefreshToken GenerateRefreshToken()
         {
             var randomBytes = RandomNumberGenerator.GetBytes(64);
 
@@ -60,7 +60,6 @@ namespace SilentMoon.Infrastructure.Persistence.Services
             {
                 Token = Convert.ToBase64String(randomBytes),
                 CreatedAt = DateTime.UtcNow,
-                CreatedByIp = ipAddress,
                 ExpiresAt = DateTime.UtcNow.AddDays(_jwtSettings.RefreshTokenDuration)
             };
         }

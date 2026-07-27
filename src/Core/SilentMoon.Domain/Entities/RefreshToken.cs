@@ -9,10 +9,8 @@ namespace SilentMoon.Domain.Entities
     {
         public string Token { get; set; }
         public DateTime CreatedAt { get; set; }
-        public string CreatedByIp { get; set; }
         public DateTime ExpiresAt { get; set; }
         public DateTime? RevokedAt { get; set; }
-        public string? RevokedByIp { get; set; }
         public int UserId { get; set; }
         public virtual ApplicationUser User { get; set; }
         public bool IsExpired => DateTime.UtcNow >= ExpiresAt;

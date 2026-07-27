@@ -1,4 +1,3 @@
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Abstractions.Messaging;
@@ -24,12 +23,18 @@ namespace SilentMoon.Application.Features.Pomodoros.Commands.CreatePomodoro
     {
         private readonly IUserService userService;
         private readonly IUow _uow;
+        private readonly IDateTimeService _dateTimeService;
         private readonly IAppLogger<CreatePomodoroCommandHandler> _logger;
 
-        public CreatePomodoroCommandHandler(IUserService userService, IUow uow, IAppLogger<CreatePomodoroCommandHandler> logger)
+        public CreatePomodoroCommandHandler(
+            IUserService userService,
+            IUow uow,
+            IDateTimeService dateTimeService,
+            IAppLogger<CreatePomodoroCommandHandler> logger)
         {
             this.userService = userService;
             _uow = uow;
+            _dateTimeService = dateTimeService;
             _logger = logger;
         }
 
@@ -41,7 +46,7 @@ namespace SilentMoon.Application.Features.Pomodoros.Commands.CreatePomodoro
             if (string.IsNullOrEmpty(userIdStr) || !int.TryParse(userIdStr, out var userId))
                 return UserErrors.Unauthorized();
 
-            var pomodoro = command.ToPomodoro();
+            var pomodoro = command.ToPomodoro(_dateTimeService.NowUtc);
             pomodoro.UserId = userId;
 
             await _uow.PomodoroRepository.AddAsync(pomodoro);

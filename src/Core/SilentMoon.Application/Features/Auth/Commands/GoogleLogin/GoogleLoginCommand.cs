@@ -5,11 +5,6 @@ using SilentMoon.Application.Interfaces.Logging;
 using SilentMoon.Application.Interfaces.Services;
 using SilentMoon.Domain.Enums;
 using SilentMoon.Domain.Errors;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -18,9 +13,6 @@ namespace SilentMoon.Application.Features.Auth.Commands.GoogleLogin
     public class GoogleLoginCommand : ICommand<AuthenticationResponse>
     {
         public string IdToken { get; set; }
-
-        [JsonIgnore]
-        public string IpAddress { get; set; }
     }
 
     public class GoogleLoginCommandHandler : ICommandHandler<GoogleLoginCommand, AuthenticationResponse>
@@ -49,7 +41,7 @@ namespace SilentMoon.Application.Features.Auth.Commands.GoogleLogin
                 return AuthErrors.InvalidExternalToken;
 
             var result = await _externalLoginProcessor.ProcessAsync(
-                externalUser, AuthenticationProvider.Google, command.IpAddress, ct);
+                externalUser, AuthenticationProvider.Google, ct);
 
             if (result.IsSuccess)
                 _logger.LogInformation("Google login successful for {Email}", externalUser.Email);

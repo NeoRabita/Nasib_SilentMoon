@@ -6,7 +6,7 @@ namespace SilentMoon.Application.Mappings
 {
     public static class PomodoroMappingExtensions
     {
-        public static Pomodoro ToPomodoro(this CreatePomodoroCommand command)
+        public static Pomodoro ToPomodoro(this CreatePomodoroCommand command,DateTime createDate)
         {
             if (command == null) return null;
 
@@ -18,7 +18,7 @@ namespace SilentMoon.Application.Mappings
                 LongBreakInterval = command.LongBreakInterval,
                 PeriodCount = command.PeriodCount,
                 Color = command.Color,
-                CreateDate = DateTime.Now,
+                CreateDate = createDate,
                 IsDeleted = false,
                 PomodoroTime = command.PomodoroTime
             };

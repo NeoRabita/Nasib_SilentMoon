@@ -5,10 +5,6 @@ using SilentMoon.Application.Interfaces.Logging;
 using SilentMoon.Application.Interfaces.Services;
 using SilentMoon.Domain.Errors;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -17,9 +13,6 @@ namespace SilentMoon.Application.Features.Auth.Commands.RefreshToken
     public class RefreshTokenCommand : ICommand<AuthenticationResponse>
     {
         public string RefreshToken { get; set; }
-
-        [JsonIgnore]
-        public string IpAddress { get; set; } 
     }
 
     public class RefreshTokenCommandHandler : ICommandHandler<RefreshTokenCommand, AuthenticationResponse>
@@ -53,17 +46,13 @@ namespace SilentMoon.Application.Features.Auth.Commands.RefreshToken
             if (user is null || !user.IsActive)
                 return AuthErrors.UserInactive;
 
-         
-            storedToken.RevokedAt = System.DateTime.UtcNow;
-            storedToken.RevokedByIp = command.IpAddress;
+            storedToken.RevokedAt = _dateTimeService.NowUtc;
             _uow.RefreshTokenRepository.Update(storedToken);
 
-     
-            var newRefreshToken = _jwtService.GenerateRefreshToken(command.IpAddress);
+            var newRefreshToken = _jwtService.GenerateRefreshToken();
             newRefreshToken.UserId = user.Id;
             await _uow.RefreshTokenRepository.AddAsync(newRefreshToken, ct);
 
-         
             var accessToken = _jwtService.GenerateAccessToken(user);
 
             _logger.LogInformation("Token refreshed for user {UserId}", user.Id);

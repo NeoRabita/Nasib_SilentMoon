@@ -5,11 +5,6 @@ using SilentMoon.Application.Interfaces.Logging;
 using SilentMoon.Application.Interfaces.Services;
 using SilentMoon.Domain.Enums;
 using SilentMoon.Domain.Errors;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -18,9 +13,6 @@ namespace SilentMoon.Application.Features.Auth.Commands.FacebookLogin
     public class FacebookLoginCommand : ICommand<AuthenticationResponse>
     {
         public string AccessToken { get; set; }
-
-        [JsonIgnore]
-        public string IpAddress { get; set; }
     }
 
     public class FacebookLoginCommandHandler : ICommandHandler<FacebookLoginCommand, AuthenticationResponse>
@@ -48,12 +40,11 @@ namespace SilentMoon.Application.Features.Auth.Commands.FacebookLogin
             if (externalUser is null)
                 return AuthErrors.InvalidExternalToken;
 
-         
             if (string.IsNullOrWhiteSpace(externalUser.Email))
                 return AuthErrors.InvalidExternalToken;
 
             var result = await _externalLoginProcessor.ProcessAsync(
-                externalUser, AuthenticationProvider.Facebook, command.IpAddress, ct);
+                externalUser, AuthenticationProvider.Facebook, ct);
 
             if (result.IsSuccess)
                 _logger.LogInformation("Facebook login successful for {Email}", externalUser.Email);
