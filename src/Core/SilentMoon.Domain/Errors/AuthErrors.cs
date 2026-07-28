@@ -47,5 +47,9 @@ namespace SilentMoon.Domain.Errors
         public static readonly Error WrongProvider = Error.Conflict(
             "Auth.WrongProvider",
             "This email is registered with a different authentication provider.");
+
+        public static readonly Error PasswordResetNotAllowedForExternalProvider = Error.Conflict(
+            "Auth.PasswordResetNotAllowedForExternalProvider",
+            "This account uses external login (Google/Facebook) and has no password to reset.");
     }
 }

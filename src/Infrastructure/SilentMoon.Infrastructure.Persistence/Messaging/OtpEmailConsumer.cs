@@ -120,6 +120,9 @@ namespace SilentMoon.Infrastructure.Persistence.Messaging
                 OtpPurpose.Resend => (
                     "SilentMoon - Email Verification (Resend)",
                     $"<h3>Hello, {e.FirstName}!</h3><p>Your new verification code: <b>{e.OtpCode}</b></p><p>This code expires in 5 minutes.</p>"),
+                OtpPurpose.PasswordReset => (
+                    "SilentMoon - Password Reset Code",
+                    $"<h3>Hello, {e.FirstName}!</h3><p>Your password reset code: <b>{e.OtpCode}</b></p><p>This code expires in 5 minutes. If you didn't request this, you can ignore this email.</p>"),
                 _ => (
                     "SilentMoon - Email Verification",
                     $"<h3>Welcome, {e.FirstName}!</h3><p>Your verification code: <b>{e.OtpCode}</b></p><p>This code expires in 5 minutes.</p>")

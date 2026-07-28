@@ -8,6 +8,8 @@ using SilentMoon.Application.Features.Auth.Commands.Logout;
 using SilentMoon.Application.Features.Auth.Commands.RefreshToken;
 using SilentMoon.Application.Features.Auth.Commands.Register;
 using SilentMoon.Application.Features.Auth.Commands.ResendOtp;
+using SilentMoon.Application.Features.Auth.Commands.ForgotPassword;
+using SilentMoon.Application.Features.Auth.Commands.ResetPassword;
 using SilentMoon.Application.Features.Auth.Commands.VerifyEmail;
 using System.Threading.Tasks;
 
@@ -40,6 +42,19 @@ namespace SilentMoon.WebApi.Controllers
 
         [HttpPost("resend-otp")]
         public async Task<IResult> ResendOtp([FromBody] ResendOtpCommand command)
+        {
+            var result = await Dispatcher.Send(command);
+            return HandleResult(result);
+        }
+        [HttpPost("forgot-password")]
+        public async Task<IResult> ForgotPassword([FromBody] ForgotPasswordCommand command)
+        {
+            var result = await Dispatcher.Send(command);
+            return HandleResult(result);
+        }
+
+        [HttpPost("reset-password")]
+        public async Task<IResult> ResetPassword([FromBody] ResetPasswordCommand command)
         {
             var result = await Dispatcher.Send(command);
             return HandleResult(result);

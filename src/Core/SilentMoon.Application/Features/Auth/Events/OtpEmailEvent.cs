@@ -9,7 +9,8 @@ namespace SilentMoon.Application.Features.Auth.Events
     public enum OtpPurpose
     {
         Register = 1,
-        Resend = 2
+        Resend = 2,
+        PasswordReset =3
     }
 
     public class OtpEmailEvent
